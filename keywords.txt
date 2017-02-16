@@ -1,0 +1,42 @@
+#######################################
+# Syntax Coloring Map For debug_lvc
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+I2CMotorDriver	KEYWORD1
+Motor           KEYWORD1
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin	      KEYWORD2
+speed         KEYWORD2
+frequence	  KEYWORD2
+stop	      KEYWORD2
+StepperRun    KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+MotorSpeedSet             LITERAL1
+PWMFrequenceSet           LITERAL1
+DirectionSet              LITERAL1
+MotorSetA                 LITERAL1
+MotorSetB                 LITERAL1
+Nothing                   LITERAL1
+MOTOR1 			          LITERAL1
+MOTOR2 			          LITERAL1
+BothClockWise             LITERAL1
+BothAntiClockWise         LITERAL1
+M1CWM2ACW                 LITERAL1
+M1ACWM2CW                 LITERAL1
+ClockWise                 LITERAL1
+AntiClockWise             LITERAL1
+F_31372Hz                 LITERAL1
+F_3921Hz                  LITERAL1
+F_490Hz                   LITERAL1
+F_122Hz                   LITERAL1
+F_30Hz                    LITERAL1
