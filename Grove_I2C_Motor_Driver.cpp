@@ -151,7 +151,9 @@ void I2CMotorDriver::stop(unsigned char motor_id)
 // _step: -1024~1024, when _step>0, stepper motor runs clockwise; when _step<0, 
 // stepper motor runs anticlockwise; when _step is 512, the stepper motor will 
 // run a complete turn; if step is 1024, the stepper motor will run 2 turns.
-void I2CMotorDriver::StepperRun(int _step) 
+//  _type: 0 -> 4 phase stepper motor, default
+//         1 -> 2 phase stepper motor
+void I2CMotorDriver::StepperRun(int _step, int _type) 
 {
 	int _direction = 1;
 	if (_step > 0) {
@@ -171,57 +173,60 @@ void I2CMotorDriver::StepperRun(int _step)
   	Wire.endTransmission();    		        // stop transmitting
   	delay(4); 				                // wait
 
-	#ifdef TWO_PHASE_STEPPER_MOTOR
-	if (_direction == 1) {				//four wire stepper motor
-		for (int i=0; i<_step; i++) {
-			direction(0b0001);
-			direction(0b0101);
-			direction(0b0100);
-			direction(0b0110);
-			direction(0b0010);
-			direction(0b1010);
-			direction(0b1000);
-			direction(0b1001);
+	if (_type == 1)
+	{
+		if (_direction == 1) {				// 2 phase motor
+			for (int i=0; i<_step; i++) {
+				direction(0b0001);
+				direction(0b0101);
+				direction(0b0100);
+				direction(0b0110);
+				direction(0b0010);
+				direction(0b1010);
+				direction(0b1000);
+				direction(0b1001);
+			}
+		}
+		else if (_direction == -1) {
+			for (int i=0; i<_step; i++) {
+				direction(0b1000);
+				direction(0b1010);
+				direction(0b0010);
+				direction(0b0110);
+				direction(0b0100);
+				direction(0b0101);
+				direction(0b0001);
+				direction(0b1001);
+			}
 		}
 	}
-	else if (_direction == -1) {
-		for (int i=0; i<_step; i++) {
-			direction(0b1000);
-			direction(0b1010);
-			direction(0b0010);
-			direction(0b0110);
-			direction(0b0100);
-			direction(0b0101);
-			direction(0b0001);
-			direction(0b1001);
+	else if (_type == 0)
+	{
+		if (_direction == 1) {				// 4 phase motor
+			for (int i=0; i<_step; i++) {
+				direction(0b0001);
+				direction(0b0011);
+				direction(0b0010);
+				direction(0b0110);
+				direction(0b0100);
+				direction(0b1100);
+				direction(0b1000);
+				direction(0b1001);
+			}
+		}
+		else if (_direction == -1) {
+			for (int i=0; i<_step; i++) {
+				direction(0b1000);
+				direction(0b1100);
+				direction(0b0100);
+				direction(0b0110);
+				direction(0b0010);
+				direction(0b0011);
+				direction(0b0001);
+				direction(0b1001);
+			}
 		}
 	}
-	#else
-	if (_direction == 1) {				//five wire stepper motor
-		for (int i=0; i<_step; i++) {
-			direction(0b0001);
-			direction(0b0011);
-			direction(0b0010);
-			direction(0b0110);
-			direction(0b0100);
-			direction(0b1100);
-			direction(0b1000);
-			direction(0b1001);
-		}
-	}
-	else if (_direction == -1) {
-		for (int i=0; i<_step; i++) {
-			direction(0b1000);
-			direction(0b1100);
-			direction(0b0100);
-			direction(0b0110);
-			direction(0b0010);
-			direction(0b0011);
-			direction(0b0001);
-			direction(0b1001);
-		}
-	}
-	#endif
 }
 
 

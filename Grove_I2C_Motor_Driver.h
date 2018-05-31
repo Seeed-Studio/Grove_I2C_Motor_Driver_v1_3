@@ -97,7 +97,9 @@ public:
     // _step<0, stepper motor runs anticlockwise; when _step is 512, the stepper
     // motor will run a complete turn; if step is 1024, the stepper motor will
     // run 2 turns.
-    void StepperRun(int _step); 
+    // _type: 0 -> 4 phase stepper motor
+    //        1 -> 2 phase stepper motor
+    void StepperRun(int _step, int _type = 0); 
 };
 
 extern I2CMotorDriver Motor;

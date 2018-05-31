@@ -36,7 +36,7 @@ Simply copy the Grove_I2C_Motor_Driver_v1_3 folder to your Arduino library colle
     void setup() {
       Motor.begin(I2C_ADDRESS);
     }
-```
+    ```
 
 ### 2. Drive 2 DC motors
 
@@ -47,16 +47,16 @@ Simply copy the Grove_I2C_Motor_Driver_v1_3 folder to your Arduino library colle
 
     // Stop one motor
     void stop(unsigned char motor_id);
-```
+    ```
 With speed() function, you are able to drive one motor at the speed you want.
 
-    **motor_id** represents which motor to use. You can fill MOTOR1 or MOTOR2.
+**motor_id** represents which motor to use. You can fill MOTOR1 or MOTOR2.
 
-    **_speed** represents the speed you set to the motor. You can fill -100~100 here. When _speed>0, DC motor runs clockwise, while _speed<0, DC motor runs anticlockwise. And the bigger the absolute value of _speed, the faster the speed of DC motor.
+**_speed** represents the speed you set to the motor. You can fill -100~100 here. When _speed>0, DC motor runs clockwise, while _speed<0, DC motor runs anticlockwise. And the bigger the absolute value of _speed, the faster the speed of DC motor.
 
-    With stop() function, you are able to stop a running DC motor.
+With stop() function, you are able to stop a running DC motor.
 
-    **motor_id** represents which motor to use. You can fill MOTOR1 or MOTOR2.
+**motor_id** represents which motor to use. You can fill MOTOR1 or MOTOR2.
 
 
 ### 3. Drive a Stepper Motor
@@ -65,6 +65,9 @@ With speed() function, you are able to drive one motor at the speed you want.
     ```
     // Drive a stepper motor
     
-    void StepperRun(int _step);
-```
+    void StepperRun(int _step, int _type=0);
+    ```
+
+
 **_step** represents the steps you set to the stepper motor to run. You can fill -1024~1024. When _step>0, stepper motor runs clockwise, while _step<0, stepper motor runs anticlockwise. When _step is 512/-512, the stepper motor will run a complete turn and if _step is 1024/-1024, the stepper motor will run 2 turns. The stepper motor will stop automatically after it finishes its steps.
+**_type** represents the type of stepper motor, 0 is for 4 phase stepper motor(default) and 1 for 2 phase stepper motor
