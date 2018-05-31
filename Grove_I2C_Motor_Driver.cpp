@@ -6,7 +6,7 @@
  * Website    : www.seeed.cc
  * Author     : Jerry Yip
  * Create Time: 2017-02
- * Change Log :
+ * Change Log : 2018-05-31 1.support two phase stepper motor
  *
  * The MIT License (MIT)
  *
@@ -34,9 +34,9 @@
 #include <Wire.h>
 
 /*********************************stepper motor type*******************************/
-// Define stepper motor type. If the motor has five wires, comment out this 
-// line; if the motor is four wires, do not comment this line.
-#define Two_Phase_Four_Wire
+// Define stepper motor type. Support 4 phase stepper motor by default. 
+// If 2 phase motor is used, define TWO_PHASE_STEPPER_MOTOR in the ino file.
+// #define TWO_PHASE_STEPPER_MOTOR
 
 // *********************************Initialize*********************************
 // Initialize I2C with an I2C address you set on Grove - I2C Motor Driver v1.3
@@ -171,7 +171,7 @@ void I2CMotorDriver::StepperRun(int _step)
   	Wire.endTransmission();    		        // stop transmitting
   	delay(4); 				                // wait
 
-	#ifdef Two_Phase_Four_Wire
+	#ifdef TWO_PHASE_STEPPER_MOTOR
 	if (_direction == 1) {				//four wire stepper motor
 		for (int i=0; i<_step; i++) {
 			direction(0b0001);
