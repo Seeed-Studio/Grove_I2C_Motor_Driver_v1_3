@@ -33,6 +33,11 @@
 #include <Grove_I2C_Motor_Driver.h>
 #include <Wire.h>
 
+/*********************************stepper motor type*******************************/
+// Define stepper motor type. If the motor has five wires, comment out this 
+// line; if the motor is four wires, do not comment this line.
+#define Two_Phase_Four_Wire
+
 // *********************************Initialize*********************************
 // Initialize I2C with an I2C address you set on Grove - I2C Motor Driver v1.3
 // default i2c address: 0x0f
@@ -165,31 +170,58 @@ void I2CMotorDriver::StepperRun(int _step)
   	Wire.write(this->_speed2);              // send speed of motor2
   	Wire.endTransmission();    		        // stop transmitting
   	delay(4); 				                // wait
-  	
-  	if (_direction == 1) {	
-	  	for (int i=0; i<_step; i++) {
-	  		direction(0b0001);
-	  		direction(0b0011);
-	  		direction(0b0010);
-	  		direction(0b0110);
-	  		direction(0b0100);
-	  		direction(0b1100);
-	  		direction(0b1000);
-	  		direction(0b1001);
-	  	}
+
+	#ifdef Two_Phase_Four_Wire
+	if (_direction == 1) {				//four wire stepper motor
+		for (int i=0; i<_step; i++) {
+			direction(0b0001);
+			direction(0b0101);
+			direction(0b0100);
+			direction(0b0110);
+			direction(0b0010);
+			direction(0b1010);
+			direction(0b1000);
+			direction(0b1001);
+		}
 	}
 	else if (_direction == -1) {
-	  	for (int i=0; i<_step; i++) {
-	  		direction(0b1000);
-	  		direction(0b1100);
-	  		direction(0b0100);
-	  		direction(0b0110);
-	  		direction(0b0010);
-	  		direction(0b0011);
-	  		direction(0b0001);
-	  		direction(0b1001);
-	  	}
-	}	
+		for (int i=0; i<_step; i++) {
+			direction(0b1000);
+			direction(0b1010);
+			direction(0b0010);
+			direction(0b0110);
+			direction(0b0100);
+			direction(0b0101);
+			direction(0b0001);
+			direction(0b1001);
+		}
+	}
+	#else
+	if (_direction == 1) {				//five wire stepper motor
+		for (int i=0; i<_step; i++) {
+			direction(0b0001);
+			direction(0b0011);
+			direction(0b0010);
+			direction(0b0110);
+			direction(0b0100);
+			direction(0b1100);
+			direction(0b1000);
+			direction(0b1001);
+		}
+	}
+	else if (_direction == -1) {
+		for (int i=0; i<_step; i++) {
+			direction(0b1000);
+			direction(0b1100);
+			direction(0b0100);
+			direction(0b0110);
+			direction(0b0010);
+			direction(0b0011);
+			direction(0b0001);
+			direction(0b1001);
+		}
+	}
+	#endif
 }
 
 
