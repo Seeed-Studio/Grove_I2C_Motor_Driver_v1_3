@@ -6,7 +6,7 @@
 # Datatypes (KEYWORD1)
 #######################################
 I2CMotorDriver	KEYWORD1
-Motor           KEYWORD1
+Motor	KEYWORD1
 
 
 #######################################
