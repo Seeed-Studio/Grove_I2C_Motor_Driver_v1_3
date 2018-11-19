@@ -61,13 +61,25 @@ With stop() function, you are able to stop a running DC motor.
 
 ### 3. Drive a Stepper Motor
 
-- We provide one function to drive a stepper motor.
-    ```
-    // Drive a stepper motor
-    
-    void StepperRun(int _step, int _type=0);
-    ```
+- We provide a function to drive a stepper motor. 
+```
+// Drive a stepper motor
+void StepperRun(int _step, int _type=0);
+```
+- **_step** represents the steps you set to the stepper motor to run. You can fill -1024~1024. When _step>0, stepper motor runs clockwise, while _step<0, stepper motor runs anticlockwise. When _step is 512/-512, the stepper motor will run a complete turn and if _step is 1024/-1024, the stepper motor will run 2 turns. The stepper motor will stop automatically after it finishes its steps.
+**_type** represents the type of stepper motor, __0 is for 4 phase stepper motor(default)__ and __1 for 2 phase stepper motor__.
 
+eg:
 
-**_step** represents the steps you set to the stepper motor to run. You can fill -1024~1024. When _step>0, stepper motor runs clockwise, while _step<0, stepper motor runs anticlockwise. When _step is 512/-512, the stepper motor will run a complete turn and if _step is 1024/-1024, the stepper motor will run 2 turns. The stepper motor will stop automatically after it finishes its steps.
-**_type** represents the type of stepper motor, 0 is for 4 phase stepper motor(default) and 1 for 2 phase stepper motor
+1. Set step as 512 and drive a 4 phase stepper motor.
+```    
+void StepperRun(512, 0);
+```
+Or
+```    
+void StepperRun(512);
+```
+2. Set step as 512 and drive a 2 phase stepper motor.
+```    
+void StepperRun(512, 1);
+```
