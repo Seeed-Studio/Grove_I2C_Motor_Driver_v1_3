@@ -73,13 +73,13 @@ eg:
 
 1. Set step as 512 and drive a 4 phase stepper motor.
 ```    
-void StepperRun(512, 0);
+StepperRun(512, 0);
 ```
 Or
 ```    
-void StepperRun(512);
+StepperRun(512);
 ```
 2. Set step as 512 and drive a 2 phase stepper motor.
 ```    
-void StepperRun(512, 1);
+StepperRun(512, 1);
 ```
