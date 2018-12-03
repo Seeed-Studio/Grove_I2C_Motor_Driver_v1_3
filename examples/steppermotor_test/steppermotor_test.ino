@@ -36,6 +36,7 @@
 
 
 void setup() {
+    Serial.begin(9600);
 	Motor.begin(I2C_ADDRESS);
     // Drive a stepper motor
     // _step: -1024~1024, when _step>0, stepper motor runs clockwise; _step<0, stepper

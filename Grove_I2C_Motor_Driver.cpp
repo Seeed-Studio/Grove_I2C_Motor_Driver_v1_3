@@ -43,7 +43,6 @@
 // default i2c address: 0x0f
 void I2CMotorDriver::begin(unsigned char i2c_add)
 {
-	Serial.begin(9600);
 	if (i2c_add > 0x0f) {
 		Serial.println("Error! I2C address must be between 0x00 to 0x0F");
 		while(1);

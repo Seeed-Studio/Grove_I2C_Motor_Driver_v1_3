@@ -35,6 +35,7 @@
 #define I2C_ADDRESS 0x0f
 
 void setup() {
+  Serial.begin(9600);
   Motor.begin(I2C_ADDRESS);
 }
 
