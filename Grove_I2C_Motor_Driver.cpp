@@ -41,17 +41,18 @@
 // *********************************Initialize*********************************
 // Initialize I2C with an I2C address you set on Grove - I2C Motor Driver v1.3
 // default i2c address: 0x0f
-void I2CMotorDriver::begin(unsigned char i2c_add)
+int I2CMotorDriver::begin(unsigned char i2c_add)
 {
 	if (i2c_add > 0x0f) {
 		Serial.println("Error! I2C address must be between 0x00 to 0x0F");
-		while(1);
+		return(-1); // I2C address error
 	}
 	Wire.begin();
 	delayMicroseconds(10000);
 	this->_i2c_add = i2c_add;
 	// Set default frequence to F_3921Hz
 	frequence(F_3921Hz);
+	return(0); // OK
 }
 
 // *****************************Private Function*******************************
@@ -152,6 +153,9 @@ void I2CMotorDriver::stop(unsigned char motor_id)
 // run a complete turn; if step is 1024, the stepper motor will run 2 turns.
 //  _type: 0 -> 4 phase stepper motor, default
 //         1 -> 2 phase stepper motor
+
+// ToDo: __step should be corresponding the number of pulses...>
+
 void I2CMotorDriver::StepperRun(int _step, int _type) 
 {
 	int _direction = 1;
