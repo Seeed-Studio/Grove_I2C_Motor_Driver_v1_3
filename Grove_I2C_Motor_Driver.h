@@ -80,7 +80,7 @@ private:
 public:
     // Initialize I2C with an I2C address you set on Grove - I2C Motor Driver v1.3
     // default i2c address: 0x0f
-    void begin(unsigned char i2c_add);
+    int begin(unsigned char i2c_add);
     // Set the speed of a motor, speed is equal to duty cycle here
     // motor_id: MOTOR1, MOTOR2
     // _speed: -100~100, when _speed>0, dc motor runs clockwise; 

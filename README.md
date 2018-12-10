@@ -84,3 +84,7 @@ StepperRun(512);
 ```    
 StepperRun(512, 1);
 ```
+
+Note that number of pulses for "__step" is 4 (for 2-phase motor), and the number of steps of one motor turn is dependent on the spec of the stepping motor. For example, for the motor with 100 pulse per turn (3.6 degree per pulse), __step=25 will make one turn of the motor.
+
+
