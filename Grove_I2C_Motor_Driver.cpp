@@ -152,7 +152,9 @@ void I2CMotorDriver::stop(unsigned char motor_id)
 // run a complete turn; if step is 1024, the stepper motor will run 2 turns.
 //  _type: 0 -> 4 phase stepper motor, default
 //         1 -> 2 phase stepper motor
-void I2CMotorDriver::StepperRun(int _step, int _type) 
+//  _mode: 0 -> compatible mode (_step=1 corresponds 4 steps)
+//         1 -> fine mode (_step1 corresponds 1 steps)
+void I2CMotorDriver::StepperRun(int _step, int _type, int _mode) 
 {
 	int _direction = 1;
 	if (_step > 0) {
@@ -176,53 +178,98 @@ void I2CMotorDriver::StepperRun(int _step, int _type)
 	{
 		if (_direction == 1) {				// 2 phase motor
 			for (int i=0; i<_step; i++) {
-				direction(0b0001);
-				direction(0b0101);
-				direction(0b0100);
-				direction(0b0110);
-				direction(0b0010);
-				direction(0b1010);
-				direction(0b1000);
-				direction(0b1001);
+			  if (_mode == 0){
+			    direction(0b0001);
+			    direction(0b0101);
+			    direction(0b0100);
+			    direction(0b0110);
+			    direction(0b0010);
+			    direction(0b1010);
+			    direction(0b1000);
+			    direction(0b1001);
+			  }
+			  else{
+			    switch (_step_cnt){
+			    case 0 : direction(0b0001); direction(0b0101); break;
+			    case 1 : direction(0b0100); direction(0b0110); break;
+			    case 2 : direction(0b0010); direction(0b1010); break;
+			    case 3 : direction(0b1000); direction(0b1001); break;
+			  }
+			  _step_cnt = (_step_cnt + 1) % 4;
+			  }
 			}
 		}
 		else if (_direction == -1) {
-			for (int i=0; i<_step; i++) {
-				direction(0b1000);
-				direction(0b1010);
-				direction(0b0010);
-				direction(0b0110);
-				direction(0b0100);
-				direction(0b0101);
-				direction(0b0001);
-				direction(0b1001);
-			}
+		  for (int i=0; i<_step; i++) {
+		    if (_mode == 0){
+		      direction(0b1000);
+		      direction(0b1010);
+		      direction(0b0010);
+		      direction(0b0110);
+		      direction(0b0100);
+		      direction(0b0101);
+		      direction(0b0001);
+		      direction(0b1001);
+		      }
+		    }
+		    else{
+		      switch (_step_cnt){
+		      case 0 : direction(0b1000); direction(0b1010); break;
+		      case 1 : direction(0b0010); direction(0b0110); break;
+		      case 2 : direction(0b0100); direction(0b0101); break;
+		      case 3 : direction(0b0001); direction(0b1001); break;
+		      }
+		      _step_cnt = (_step_cnt + 1) % 4;
+		    }
+		  }
 		}
 	}
 	else if (_type == 0)
 	{
 		if (_direction == 1) {				// 4 phase motor
 			for (int i=0; i<_step; i++) {
-				direction(0b0001);
-				direction(0b0011);
-				direction(0b0010);
-				direction(0b0110);
-				direction(0b0100);
-				direction(0b1100);
-				direction(0b1000);
-				direction(0b1001);
+			  if (_mode == 0){
+			    direction(0b0001);
+			    direction(0b0011);
+			    direction(0b0010);
+			    direction(0b0110);
+			    direction(0b0100);
+			    direction(0b1100);
+			    direction(0b1000);
+			    direction(0b1001);
+			  }
+			  else{
+			    switch (_step_cnt){
+			    case 0 : direction(0b0001); direction(0b0011); break;
+			    case 2 : direction(0b0010); direction(0b0110); break;
+			    case 3 : direction(0b0100); direction(0b1100); break;
+			    case 4 : direction(0b1000); direction(0b1001); break;
+			    }
+			  _step_cnt = (_step_cnt + 1) % 4;
+			  }
 			}
 		}
 		else if (_direction == -1) {
 			for (int i=0; i<_step; i++) {
-				direction(0b1000);
-				direction(0b1100);
-				direction(0b0100);
-				direction(0b0110);
-				direction(0b0010);
-				direction(0b0011);
-				direction(0b0001);
-				direction(0b1001);
+			  if (_mode == 0){
+			    direction(0b1000);
+			    direction(0b1100);
+			    direction(0b0100);
+			    direction(0b0110);
+			    direction(0b0010);
+			    direction(0b0011);
+			    direction(0b0001);
+			    direction(0b1001);
+			  }
+			  else{
+			    switch (_step_cnt){
+			    case 0 : direction(0b1000); direction(0b1100); break;
+			    case 1 : direction(0b0100); direction(0b0110); break;
+			    case 2 : direction(0b0010); direction(0b0011); break;
+			    case 3 : direction(0b0001); direction(0b1001); break;
+			    }
+			    _step_cnt = (_step_cnt + 1) % 4;
+			  }
 			}
 		}
 	}
