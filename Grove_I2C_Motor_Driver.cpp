@@ -179,7 +179,7 @@ void I2CMotorDriver::StepperRun(int _step, int _type, int _mode)
 	{
 		if (_direction == 1) {				// 2 phase motor
 			for (int i=0; i<_step; i++) {
-			  if (_mode == 0){
+			  if (_mode == 0) {
 			    direction(0b0001);
 			    direction(0b0101);
 			    direction(0b0100);
@@ -191,18 +191,18 @@ void I2CMotorDriver::StepperRun(int _step, int _type, int _mode)
 			  }
 			  else{
 			    switch (_step_cnt){
-			    case 0 : direction(0b0001); direction(0b0101); break;
-			    case 1 : direction(0b0100); direction(0b0110); break;
-			    case 2 : direction(0b0010); direction(0b1010); break;
-			    case 3 : direction(0b1000); direction(0b1001); break;
-			  }
-			  _step_cnt = (_step_cnt + 1) % 4;
+						case 0 : direction(0b0001); direction(0b0101); break;
+						case 1 : direction(0b0100); direction(0b0110); break;
+						case 2 : direction(0b0010); direction(0b1010); break;
+						case 3 : direction(0b1000); direction(0b1001); break;
+			  	}
+			  	_step_cnt = (_step_cnt + 1) % 4;
 			  }
 			}
 		}
 		else if (_direction == -1) {
 		  for (int i=0; i<_step; i++) {
-		    if (_mode == 0){
+		    if (_mode == 0) {
 		      direction(0b1000);
 		      direction(0b1010);
 		      direction(0b0010);
@@ -211,18 +211,17 @@ void I2CMotorDriver::StepperRun(int _step, int _type, int _mode)
 		      direction(0b0101);
 		      direction(0b0001);
 		      direction(0b1001);
-		      }
 		    }
-		    else{
-		      switch (_step_cnt){
-		      case 0 : direction(0b1000); direction(0b1010); break;
-		      case 1 : direction(0b0010); direction(0b0110); break;
-		      case 2 : direction(0b0100); direction(0b0101); break;
-		      case 3 : direction(0b0001); direction(0b1001); break;
-		      }
-		      _step_cnt = (_step_cnt + 1) % 4;
-		    }
-		  }
+				else {
+					switch (_step_cnt) {
+						case 0 : direction(0b1000); direction(0b1010); break;
+						case 1 : direction(0b0010); direction(0b0110); break;
+						case 2 : direction(0b0100); direction(0b0101); break;
+						case 3 : direction(0b0001); direction(0b1001); break;
+					}
+					_step_cnt = (_step_cnt + 1) % 4;
+				}
+			}
 		}
 	}
 	else if (_type == 0)
@@ -239,14 +238,14 @@ void I2CMotorDriver::StepperRun(int _step, int _type, int _mode)
 			    direction(0b1000);
 			    direction(0b1001);
 			  }
-			  else{
+			  else {
 			    switch (_step_cnt){
-			    case 0 : direction(0b0001); direction(0b0011); break;
-			    case 2 : direction(0b0010); direction(0b0110); break;
-			    case 3 : direction(0b0100); direction(0b1100); break;
-			    case 4 : direction(0b1000); direction(0b1001); break;
+						case 0 : direction(0b0001); direction(0b0011); break;
+						case 2 : direction(0b0010); direction(0b0110); break;
+						case 3 : direction(0b0100); direction(0b1100); break;
+						case 4 : direction(0b1000); direction(0b1001); break;
 			    }
-			  _step_cnt = (_step_cnt + 1) % 4;
+			  	_step_cnt = (_step_cnt + 1) % 4;
 			  }
 			}
 		}
@@ -262,12 +261,12 @@ void I2CMotorDriver::StepperRun(int _step, int _type, int _mode)
 			    direction(0b0001);
 			    direction(0b1001);
 			  }
-			  else{
-			    switch (_step_cnt){
-			    case 0 : direction(0b1000); direction(0b1100); break;
-			    case 1 : direction(0b0100); direction(0b0110); break;
-			    case 2 : direction(0b0010); direction(0b0011); break;
-			    case 3 : direction(0b0001); direction(0b1001); break;
+			  else {
+			    switch (_step_cnt) {
+						case 0 : direction(0b1000); direction(0b1100); break;
+						case 1 : direction(0b0100); direction(0b0110); break;
+						case 2 : direction(0b0010); direction(0b0011); break;
+						case 3 : direction(0b0001); direction(0b1001); break;
 			    }
 			    _step_cnt = (_step_cnt + 1) % 4;
 			  }
