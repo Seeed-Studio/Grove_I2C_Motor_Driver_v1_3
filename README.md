@@ -1,4 +1,4 @@
-# Grove - I2C Motor Driver v1.3
+# Grove - I2C Motor Driver v1.3  [![Build Status](https://travis-ci.com/Seeed-Studio/Grove_I2C_Motor_Driver_v1_3.svg?branch=master)](https://travis-ci.com/Seeed-Studio/Grove_I2C_Motor_Driver_v1_3)
 
 ![](https://raw.githubusercontent.com/SeeedDocument/Grove-I2C_Motor_Driver_V1.3/master/img/I2CMotorDriver_New.jpg)
 
