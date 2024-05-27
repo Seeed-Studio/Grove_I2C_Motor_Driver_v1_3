@@ -1,9 +1,13 @@
-# Grove - I2C Motor Driver v1.3  [![Build Status](https://travis-ci.com/Seeed-Studio/Grove_I2C_Motor_Driver_v1_3.svg?branch=master)](https://travis-ci.com/Seeed-Studio/Grove_I2C_Motor_Driver_v1_3)
-
+# Grove - I2C Motor Driver v1.3 & Grove - I2C Motor Driver (L298P)
 ![](https://raw.githubusercontent.com/SeeedDocument/Grove-I2C_Motor_Driver_V1.3/master/img/I2CMotorDriver_New.jpg)
+I2C Motor Driver v1.3
+![105020093_wiki](https://github.com/benppppp/Grove_I2C_Motor_Driver_v1_3/assets/170195651/d3bcfffb-89fe-431c-9900-b96b2edcdd44)
+I2C Motor Driver (L298P)
 
+This library can control both I2C Motor Driver V1.3 and I2C Motor Driver (L298P). Both version use a L298P as motor controler but V1.3 uses a Atmel ATmega8L and (L298) uses a STM32F03.
+You must upgrade (L298P) to last firmwre to be able to change PWM frequence.
 
-The Grove - I2C Motor Driver V1.3 (latest version) can directly control Stepper Motor or DC Motor. Its heart is a dual channel H-bridge driver chip（L298P）that can handle current up to 2A per channel, controlled by an Atmel ATmega8L which handles the I2C communication with for example an Arduino. Both motors can be driven simultaneously while set to a different speed and direction. It can power two brushed DC motors or one 4-wire two-phase stepper motor. It requires a 6V to 15V power supply to power the motor and has an onboard 5V voltage regulator which can power the I2C bus and the Arduino(selectable by jumper). All driver lines are protected by diodes from back-EMF.
+The Grove - I2C Motor Drive can directly control Stepper Motor or DC Motor. Its heart is a dual channel H-bridge driver chip（L298P）that can handle current up to 2A per channel, controlled by an Atmel ATmega8L which handles the I2C communication with for example an Arduino. Both motors can be driven simultaneously while set to a different speed and direction. It can power two brushed DC motors or one 4-wire two-phase stepper motor. It requires a 6V to 15V power supply to power the motor and has an onboard 5V voltage regulator which can power the I2C bus and the Arduino(selectable by jumper). All driver lines are protected by diodes from back-EMF.
 
 - Grove Compatible
 - I2C Interface
@@ -22,7 +26,7 @@ or download the zip.
 
 Simply copy the Grove_I2C_Motor_Driver_v1_3 folder to your Arduino library collection. For example, arduino-1.6.12/libraries. Next time you run the Arduino IDE, you'll have a new option in Sketch -> Include Library -> Grove_I2C_Motor_Driver_v1_3. Review the included examples in Grove_I2C_Motor_Driver_v1_3/examples.
 
-### 1. Set the address of the I2C Motor Driver
+### 1. Set the address of the I2C Motor Driver V1.3
 
 - Set the address by dial switch is a new function added to the new I2C Motor Driver.
 
@@ -37,6 +41,7 @@ Simply copy the Grove_I2C_Motor_Driver_v1_3 folder to your Arduino library colle
       Motor.begin(I2C_ADDRESS);
     }
     ```
+    Note: Default adress in 0x0F for (L298). Adress can be changed via I2C adress pins on PCB.
 
 ### 2. Drive 2 DC motors
 
@@ -47,6 +52,9 @@ Simply copy the Grove_I2C_Motor_Driver_v1_3 folder to your Arduino library colle
 
     // Stop one motor
     void stop(unsigned char motor_id);
+
+    //Set the frequence of motor
+    Motor.frequence(unsigned int _frequence);
     ```
 With speed() function, you are able to drive one motor at the speed you want.
 
@@ -58,6 +66,8 @@ With stop() function, you are able to stop a running DC motor.
 
 **motor_id** represents which motor to use. You can fill MOTOR1 or MOTOR2.
 
+**_frequence** represents the PWM frequence for (L298). For V1.3, choose among: F_31372Hz, F_3921Hz, F_490Hz, F_122Hz, F_30Hz
+Note: Only use frequence when (L298) is upgraded with the latest firmware.
 
 ### 3. Drive a Stepper Motor
 
