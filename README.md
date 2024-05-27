@@ -1,8 +1,11 @@
 # Grove - I2C Motor Driver v1.3 & Grove - I2C Motor Driver (L298P)
 ![](https://raw.githubusercontent.com/SeeedDocument/Grove-I2C_Motor_Driver_V1.3/master/img/I2CMotorDriver_New.jpg)
-I2C Motor Driver v1.3
+
+*I2C Motor Driver v1.3*
+
 ![105020093_wiki](https://github.com/benppppp/Grove_I2C_Motor_Driver_v1_3/assets/170195651/d3bcfffb-89fe-431c-9900-b96b2edcdd44)
-I2C Motor Driver (L298P)
+
+*I2C Motor Driver (L298P)*
 
 This library can control both I2C Motor Driver V1.3 and I2C Motor Driver (L298P). Both version use a L298P as motor controler but V1.3 uses a Atmel ATmega8L and (L298) uses a STM32F03.
 You must upgrade (L298P) to last firmwre to be able to change PWM frequence.
@@ -54,7 +57,7 @@ Simply copy the Grove_I2C_Motor_Driver_v1_3 folder to your Arduino library colle
     void stop(unsigned char motor_id);
 
     //Set the frequence of motor
-    Motor.frequence(unsigned int _frequence);
+    void frequence(unsigned int _frequence);
     ```
 With speed() function, you are able to drive one motor at the speed you want.
 
