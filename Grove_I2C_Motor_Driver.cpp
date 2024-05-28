@@ -7,69 +7,67 @@
     Author     : Jerry Yip
     Create Time: 2017-02
     Change Log : 2018-05-31 1.support two phase stepper motor
+                 20204-06-28 (L298) support frequence (V1.03)
 
-    The MIT License (MIT)
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.
-*/
+* The MIT License (MIT)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 
 #include <Grove_I2C_Motor_Driver.h>
 #include <Wire.h>
 
-/*********************************stepper motor type*******************************/
-// Define stepper motor type. Support 4 phase stepper motor by default.
-// If 2 phase motor is used, define TWO_PHASE_STEPPER_MOTOR in the ino file.
-// #define TWO_PHASE_STEPPER_MOTOR
-
 // *********************************Initialize*********************************
 // Initialize I2C with an I2C address you set on Grove - I2C Motor Driver v1.3
 // default i2c address: 0x0f
-int I2CMotorDriver::begin(unsigned char i2c_add) {
-    if (i2c_add > 0x0f) {
-        Serial.println("Error! I2C address must be between 0x00 to 0x0F");
-        return (-1); // I2C address error
-    }
-    Wire.begin();
-    delayMicroseconds(10000);
-    this->_i2c_add = i2c_add;
-    // Set default frequence to F_3921Hz
-    frequence(F_3921Hz);
-    return (0); // OK
+void I2CMotorDriver::begin(unsigned char i2c_add)
+{
+	Serial.begin(9600);
+	if (i2c_add > 0x0f) {
+		Serial.println("Error! I2C address must be between 0x00 to 0x0F");
+		while(1);
+	}
+	Wire.begin();
+	delayMicroseconds(10000);
+	this->_i2c_add = i2c_add;
+	// Motor shield V1.3 Set default frequence to F_3921Hz=0x02
+	// Motor shield STM32 (L298) Set default frequence to 514 Hz=0x0202
+	frequence(0x0202);
 }
 
 // *****************************Private Function*******************************
 // Set the direction of 2 motors
-// _direction: M1CWM2ACW(M1 ClockWise M2 AntiClockWise), M1ACWM2CW, BothClockWise, BothAntiClockWise,
-void I2CMotorDriver::direction(unsigned char _direction) {
-    Wire.beginTransmission(this->_i2c_add); // begin transmission
-    Wire.write(DirectionSet);               // Direction control header
-    Wire.write(_direction);                 // send direction control information
-    Wire.write(Nothing);                    // need to send this byte as the third byte(no meaning)
-    Wire.endTransmission();                 // stop transmitting
-    delay(4); 				                // wait
-}
+// _direction: M1CWM2ACW(M1 ClockWise M2 AntiClockWise), M1ACWM2CW, BothClockWise, BothAntiClockWise, 
+void I2CMotorDriver::direction(unsigned char _direction)
+{
+	Wire.beginTransmission(this->_i2c_add); // begin transmission
+  	Wire.write(DirectionSet);               // Direction control header
+  	Wire.write(_direction);                 // send direction control information
+  	Wire.write(Nothing);                    // need to send this byte as the third byte(no meaning)  
+  	Wire.endTransmission();                 // stop transmitting 
+ }
 
 // *****************************DC Motor Function******************************
 // Set the speed of a motor, speed is equal to duty cycle here
 // motor_id: MOTOR1, MOTOR2
-// _speed: -100~100, when _speed>0, dc motor runs clockwise; when _speed<0,
+// _speed: -255~255, when _speed>0, dc motor runs clockwise; when _speed<0,
 // dc motor runs anticlockwise
 void I2CMotorDriver::speed(unsigned char motor_id, int _speed) {
     if (motor_id < MOTOR1 || motor_id > MOTOR2) {
@@ -80,22 +78,22 @@ void I2CMotorDriver::speed(unsigned char motor_id, int _speed) {
     if (motor_id == MOTOR1) {
         if (_speed >= 0) {
             this->_M1_direction = 1;
-            _speed = _speed > 100 ? 100 : _speed;
-            this->_speed1 = map(_speed, 0, 100, 0, 255);
+            _speed = _speed > 255 ? 255 : _speed;
+            this->_speed1 = _speed;
         } else if (_speed < 0) {
             this->_M1_direction = -1;
-            _speed = _speed < -100 ? 100 : -(_speed);
-            this->_speed1 = map(_speed, 0, 100, 0, 255);
+            _speed = _speed < -255 ? 255 : -(_speed);
+            this->_speed1 = _speed;
         }
     } else if (motor_id == MOTOR2) {
         if (_speed >= 0) {
             this->_M2_direction = 1;
-            _speed = _speed > 100 ? 100 : _speed;
-            this->_speed2 = map(_speed, 0, 100, 0, 255);
+            _speed = _speed > 255 ? 255 : _speed;
+            this->_speed2 = _speed;
         } else if (_speed < 0) {
             this->_M2_direction = -1;
-            _speed = _speed < -100 ? 100 : -(_speed);
-            this->_speed2 = map(_speed, 0, 100, 0, 255);
+            _speed = _speed < -255 ? 255 : -(_speed);
+            this->_speed2 = _speed;
         }
     }
     // Set the direction
@@ -120,30 +118,28 @@ void I2CMotorDriver::speed(unsigned char motor_id, int _speed) {
     delay(4); 				                // Wait
 }
 
-// Set the frequence of PWM(cycle length = 510, system clock = 16MHz)
-// F_3921Hz is default
-// _frequence: F_31372Hz, F_3921Hz, F_490Hz, F_122Hz, F_30Hz
-void I2CMotorDriver::frequence(unsigned char _frequence) {
-    if (_frequence < F_31372Hz || _frequence > F_30Hz) {
-        Serial.println("frequence error! Must be F_31372Hz, F_3921Hz, F_490Hz, F_122Hz, F_30Hz");
-        return;
-    }
-    Wire.beginTransmission(this->_i2c_add); // begin transmission
-    Wire.write(PWMFrequenceSet);            // set frequence header
-    Wire.write(_frequence);                 // send frequence
-    Wire.write(Nothing);                    // need to send this byte as the third byte(no meaning)
-    Wire.endTransmission();                 // stop transmitting
-    delay(4); 				                // wait
+
+// Set the frequence of PWM
+// Motor shield V1.3: F_3921Hz is default _frequence: F_31372Hz, F_3921Hz, F_490Hz, F_122Hz, F_30Hz (first byte used only)
+// Motor shield STM32 (L298): _frequence send with 2 bytes
+void I2CMotorDriver::frequence(unsigned int _frequence)
+{
+	Wire.beginTransmission(this->_i2c_add); // begin transmission
+  	Wire.write(PWMFrequenceSet);            // set frequence header
+ 	Wire.write(_frequence & 0xFF);                 // send frequence LSB
+ 	Wire.write(_frequence >> 8);                   //send _frequence MSB 
+ 	Wire.endTransmission();                 // stop transmitting
 }
 
 // Stop one motor
 // motor_id: MOTOR1, MOTOR2
-void I2CMotorDriver::stop(unsigned char motor_id) {
-    if (motor_id < MOTOR1 || motor_id > MOTOR2) {
-        Serial.println("Motor id error! Must be MOTOR1 or MOTOR2");
-        return;
-    }
-    speed(motor_id, 0);
+void I2CMotorDriver::stop(unsigned char motor_id)
+{
+	if (motor_id<MOTOR1 || motor_id>MOTOR2) {
+		Serial.println("Motor id error! Must be MOTOR1 or MOTOR2");
+		return;
+	}
+	speed(motor_id, 0);
 }
 
 // ***************************Stepper Motor Function***************************
@@ -171,26 +167,25 @@ void I2CMotorDriver::StepperRun(int _step, int _type, int _mode) {
     Wire.write(this->_speed1);              // send speed of motor1
     Wire.write(this->_speed2);              // send speed of motor2
     Wire.endTransmission();    		        // stop transmitting
-    delay(4); 				                // wait
 
     if (_type == 1) {
         if (_direction == 1) {				// 2 phase motor
             for (int i = 0; i < _step; i++) {
                 if (_mode == 0) {
-                    direction(0b0001);
-                    direction(0b0101);
-                    direction(0b0100);
-                    direction(0b0110);
-                    direction(0b0010);
-                    direction(0b1010);
-                    direction(0b1000);
-                    direction(0b1001);
+                    direction(0b0001); delay(4);
+                    direction(0b0101); delay(4);
+                    direction(0b0100); delay(4);
+                    direction(0b0110); delay(4);
+                    direction(0b0010); delay(4);
+                    direction(0b1010); delay(4);
+                    direction(0b1000); delay(4);
+                    direction(0b1001); delay(4);
                 } else {
                     switch (_step_cnt) {
-                        case 0 : direction(0b0001); direction(0b0101); break;
-                        case 1 : direction(0b0100); direction(0b0110); break;
-                        case 2 : direction(0b0010); direction(0b1010); break;
-                        case 3 : direction(0b1000); direction(0b1001); break;
+                        case 0 : direction(0b0001); delay(4); direction(0b0101); delay(4); break;
+                        case 1 : direction(0b0100); delay(4); direction(0b0110); delay(4); break;
+                        case 2 : direction(0b0010); delay(4); direction(0b1010); delay(4); break;
+                        case 3 : direction(0b1000); delay(4); direction(0b1001); delay(4); break;
                     }
                     _step_cnt = (_step_cnt + 1) % 4;
                 }
@@ -198,20 +193,20 @@ void I2CMotorDriver::StepperRun(int _step, int _type, int _mode) {
         } else if (_direction == -1) {
             for (int i = 0; i < _step; i++) {
                 if (_mode == 0) {
-                    direction(0b1000);
-                    direction(0b1010);
-                    direction(0b0010);
-                    direction(0b0110);
-                    direction(0b0100);
-                    direction(0b0101);
-                    direction(0b0001);
-                    direction(0b1001);
+                    direction(0b1000); delay(4);
+                    direction(0b1010); delay(4);
+                    direction(0b0010); delay(4);
+                    direction(0b0110); delay(4);
+                    direction(0b0100); delay(4);
+                    direction(0b0101); delay(4);
+                    direction(0b0001); delay(4);
+                    direction(0b1001); delay(4);
                 } else {
                     switch (_step_cnt) {
-                        case 0 : direction(0b1000); direction(0b1010); break;
-                        case 1 : direction(0b0010); direction(0b0110); break;
-                        case 2 : direction(0b0100); direction(0b0101); break;
-                        case 3 : direction(0b0001); direction(0b1001); break;
+                        case 0 : direction(0b1000); delay(4); direction(0b1010);  delay(4); break;
+                        case 1 : direction(0b0010); delay(4); direction(0b0110);  delay(4); break;
+                        case 2 : direction(0b0100); delay(4); direction(0b0101);  delay(4); break;
+                        case 3 : direction(0b0001); delay(4); direction(0b1001);  delay(4); break;
                     }
                     _step_cnt = (_step_cnt + 1) % 4;
                 }
@@ -221,20 +216,20 @@ void I2CMotorDriver::StepperRun(int _step, int _type, int _mode) {
         if (_direction == 1) {				// 4 phase motor
             for (int i = 0; i < _step; i++) {
                 if (_mode == 0) {
-                    direction(0b0001);
-                    direction(0b0011);
-                    direction(0b0010);
-                    direction(0b0110);
-                    direction(0b0100);
-                    direction(0b1100);
-                    direction(0b1000);
-                    direction(0b1001);
+                    direction(0b0001); delay(4);
+                    direction(0b0011); delay(4);
+                    direction(0b0010); delay(4);
+                    direction(0b0110); delay(4);
+                    direction(0b0100); delay(4);
+                    direction(0b1100); delay(4);
+                    direction(0b1000); delay(4);
+                    direction(0b1001); delay(4);
                 } else {
                     switch (_step_cnt) {
-                        case 0 : direction(0b0001); direction(0b0011); break;
-                        case 2 : direction(0b0010); direction(0b0110); break;
-                        case 3 : direction(0b0100); direction(0b1100); break;
-                        case 4 : direction(0b1000); direction(0b1001); break;
+                        case 0 : direction(0b0001); delay(4); direction(0b0011); delay(4); break;
+                        case 2 : direction(0b0010); delay(4); direction(0b0110); delay(4); break;
+                        case 3 : direction(0b0100); delay(4); direction(0b1100); delay(4); break;
+                        case 4 : direction(0b1000); delay(4); direction(0b1001); delay(4); break;
                     }
                     _step_cnt = (_step_cnt + 1) % 4;
                 }
@@ -242,20 +237,20 @@ void I2CMotorDriver::StepperRun(int _step, int _type, int _mode) {
         } else if (_direction == -1) {
             for (int i = 0; i < _step; i++) {
                 if (_mode == 0) {
-                    direction(0b1000);
-                    direction(0b1100);
-                    direction(0b0100);
-                    direction(0b0110);
-                    direction(0b0010);
-                    direction(0b0011);
-                    direction(0b0001);
-                    direction(0b1001);
+                    direction(0b1000); delay(4);
+                    direction(0b1100); delay(4);
+                    direction(0b0100); delay(4);
+                    direction(0b0110); delay(4);
+                    direction(0b0010); delay(4);
+                    direction(0b0011); delay(4);
+                    direction(0b0001); delay(4);
+                    direction(0b1001); delay(4);
                 } else {
                     switch (_step_cnt) {
-                        case 0 : direction(0b1000); direction(0b1100); break;
-                        case 1 : direction(0b0100); direction(0b0110); break;
-                        case 2 : direction(0b0010); direction(0b0011); break;
-                        case 3 : direction(0b0001); direction(0b1001); break;
+                        case 0 : direction(0b1000); delay(4); direction(0b1100); delay(4); break;
+                        case 1 : direction(0b0100); delay(4); direction(0b0110); delay(4); break;
+                        case 2 : direction(0b0010); delay(4); direction(0b0011); delay(4); break;
+                        case 3 : direction(0b0001); delay(4); direction(0b1001); delay(4); break;
                     }
                     _step_cnt = (_step_cnt + 1) % 4;
                 }
