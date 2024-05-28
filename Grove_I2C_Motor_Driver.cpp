@@ -4,10 +4,10 @@
 
     Copyright (c) 2012 seeed technology inc.
     Website    : www.seeed.cc
-    Author     : Jerry Yip
+    Author     : Jerry Yip , benppppp
     Create Time: 2017-02
     Change Log : 2018-05-31 1.support two phase stepper motor
-                 20204-06-28 (L298) support frequence (V1.03)
+                 20204-06-28 (L298) support frequence (V1.03) needs firmwre update (by benppppp)
 
 * The MIT License (MIT)
  *
