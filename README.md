@@ -29,7 +29,9 @@ or download the zip.
 
 Simply copy the Grove_I2C_Motor_Driver_v1_3 folder to your Arduino library collection. For example, arduino-1.6.12/libraries. Next time you run the Arduino IDE, you'll have a new option in Sketch -> Include Library -> Grove_I2C_Motor_Driver_v1_3. Review the included examples in Grove_I2C_Motor_Driver_v1_3/examples.
 
-### 1. Set the address of the I2C Motor Driver V1.3
+### 1. Set the address 
+
+#### On I2C Motor Driver V1.3
 
 - Set the address by dial switch is a new function added to the new I2C Motor Driver.
 
@@ -45,6 +47,13 @@ Simply copy the Grove_I2C_Motor_Driver_v1_3 folder to your Arduino library colle
     }
     ```
     Note: Default adress in 0x0F for (L298). Adress can be changed via I2C adress pins on PCB.
+
+#### On I2C Motor Driver (L298) STM32
+
+Default I2C address is 0x0f
+
+Add jumper on I2C adress connector to change the address
+
 
 ### 2. Drive 2 DC motors
 
@@ -100,4 +109,4 @@ StepperRun(512, 1);
 
 Note that number of pulses for "__step" is 4 (for 2-phase motor), and the number of steps of one motor turn is dependent on the spec of the stepping motor. For example, for the motor with 100 pulse per turn (3.6 degree per pulse), __step=25 will make one turn of the motor.
 
-
+Stepper motor speed cannot be changed from the library. A library update could do it. Contribution welcome!
