@@ -4,9 +4,9 @@
 
     Copyright (c) 2012 seeed technology inc.
     Website    : www.seeed.cc
-    Author     : Jerry Yip
+    Author     : Jerry Yip, benppppp
     Create Time: 2017-02
-    Change Log :
+    Change Log : 2024-05-28 Example & comments with motor type and mode
 
     The MIT License (MIT)
 
@@ -36,18 +36,22 @@
 
 
 void setup() {
-    Serial.begin(9600);
-    Motor.begin(I2C_ADDRESS);
-    // Drive a stepper motor
-    // _step: -1024~1024, when _step>0, stepper motor runs clockwise; _step<0, stepper
-    // motor runs anticlockwise; when _step is 512, the stepper motor will run a complete
-    // turn; if step is 1024, the stepper motor will run 2 turns.
-    Motor.StepperRun(-1024);
-    Motor.StepperRun(512);
+  Serial.begin(9600);
+  Motor.begin(I2C_ADDRESS);
+  // Drive a stepper motor
+  //StepperRun(int _step, int _type, int _mode)
+  // _step: -1024~1024, when _step>0, stepper motor runs clockwise; when _step<0,
+  // stepper motor runs anticlockwise; when _step is 512, the stepper motor will
+  // run a complete turn; if step is 1024, the stepper motor will run 2 turns.
+  //  _type: 0 -> 4 phase stepper motor, default
+  //         1 -> 2 phase stepper motor
+  //  _mode: 0 -> compatible mode (_step=1 corresponds 4 steps)
+  //         1 -> fine mode (_step1 corresponds 1 steps)
+  Motor.StepperRun(-1024, 1, 1);
+  Motor.StepperRun(512, 1, 1);
 }
 
 void loop() {
-
 }
 
 // End of file
