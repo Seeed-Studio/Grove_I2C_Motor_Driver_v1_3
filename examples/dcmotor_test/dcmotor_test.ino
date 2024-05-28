@@ -6,7 +6,7 @@
  * Website    : www.seeed.cc
  * Author     : Jerry Yip, benppppp
  * Create Time: 2017-02
- * Change Log :
+ * Change Log : 2024/05/28 add frequence example
  *
  * The MIT License (MIT)
  *
