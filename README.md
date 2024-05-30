@@ -1,4 +1,7 @@
 # Grove - I2C Motor Driver v1.3 & Grove - I2C Motor Driver (L298P)
+This library can be used for both I2C Motor Driver v1.3 and I2C Motor Driver (L298P)
+New library can run with old (L298) firmware but PWM frequence won't work. You should upgrade library and [firmware](../../../grove_stm32f030/tree/master/firmware/) on (L298): library V1.03 with firmware 103 for example.
+
 ![](https://raw.githubusercontent.com/SeeedDocument/Grove-I2C_Motor_Driver_V1.3/master/img/I2CMotorDriver_New.jpg)
 
 *I2C Motor Driver v1.3*
