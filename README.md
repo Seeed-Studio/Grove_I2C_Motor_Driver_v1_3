@@ -60,7 +60,7 @@ Add jumper on I2C adress connector to change the address
 
 ### 2. Drive 2 DC motors
 
-- There are 2 functions to control DC motors:
+- There are 5 functions to control DC motors:
     ```
     // Set the speed of a motor, speed is equal to duty cycle here
     void speed(unsigned char motor_id, int _speed);
@@ -68,48 +68,78 @@ Add jumper on I2C adress connector to change the address
     // Stop one motor
     void stop(unsigned char motor_id);
 
-    //Set the frequence of motor
+    // Set the frequence of motor
     void frequence(unsigned int _frequence);
+
+    // Set the timeout in ms
+    void timeout(unsigned int _timeout);
+
+    // Get the timed out status
+    uint16_t gettimedout();   
     ```
-With speed() function, you are able to drive one motor at the speed you want.
+**speed()** function can drive one motor at the speed you want.
+
+- **motor_id** represents which motor to use. You can fill MOTOR1 or MOTOR2.
+
+- **_speed** represents the speed you set to the motor. You can fill -100~100 here. When _speed>0, DC motor runs clockwise, while _speed<0, DC motor runs anticlockwise. And the bigger the absolute value of _speed, the faster the speed of DC motor.
+
+**stop()** can stop a running DC motor.
 
 **motor_id** represents which motor to use. You can fill MOTOR1 or MOTOR2.
 
-**_speed** represents the speed you set to the motor. You can fill -100~100 here. When _speed>0, DC motor runs clockwise, while _speed<0, DC motor runs anticlockwise. And the bigger the absolute value of _speed, the faster the speed of DC motor.
+- **_frequence** represents the PWM frequence for (L298). For V1.3, choose among: F_31372Hz, F_3921Hz, F_490Hz, F_122Hz, F_30Hz
+Note: Only use frequence when (L298) is upgraded with firmware higher than V103.
 
-With stop() function, you are able to stop a running DC motor.
+- **timeout()** the motors stop after that timeout (only for L298 V105+)
 
-**motor_id** represents which motor to use. You can fill MOTOR1 or MOTOR2.
+**_timeout** timeout value in millis. No timeout if 0.
 
-**_frequence** represents the PWM frequence for (L298). For V1.3, choose among: F_31372Hz, F_3921Hz, F_490Hz, F_122Hz, F_30Hz
-Note: Only use frequence when (L298) is upgraded with the latest firmware.
+- **gettimedout** return the timed out status (only for L298 V105+)
+
+Return an *integer* :
+    0 : not timed out
+    1 : timed out
+    other value: wire I2C error
+Timed out is reset to 0 after speed, frequence, stop
 
 ### 3. Drive a Stepper Motor
 
 - We provide a function to drive a stepper motor. 
 ```
-// Drive a stepper motor
-void StepperRun(int _step, int _type=0, int _mode=0);
+    // Drive a stepper motor
+    void StepperRun(int _step, int _type=0, int _mode=0);
 ```
 - **_step** represents the steps you set to the stepper motor to run. You can fill -1024~1024. When _step>0, stepper motor runs clockwise, while _step<0, stepper motor runs anticlockwise. When _step is 512/-512, the stepper motor will run a complete turn and if _step is 1024/-1024, the stepper motor will run 2 turns. The stepper motor will stop automatically after it finishes its steps.
-**_type** represents the type of stepper motor, __0 is for 4 phase stepper motor(default)__ and __1 for 2 phase stepper motor__.
-**_mode** represents the operation mode. 0 for compatible mode (_step=1 corresponds 4 steps of motor), and 1 for fine mode (_step=1 corresponds 1 step of motor)
+- **_type** represents the type of stepper motor, __0 is for 4 phase stepper motor(default)__ and __1 for 2 phase stepper motor__.
+- **_mode** represents the operation mode. 0 for compatible mode (_step=1 corresponds 4 steps of motor), and 1 for fine mode (_step=1 corresponds 1 step of motor)
 
 eg:
 
 1. Set step as 512 and drive a 4 phase stepper motor.
-```    
-StepperRun(512, 0);
-```
+    ```    
+    StepperRun(512, 0);
+    ```
 Or
-```    
-StepperRun(512);
-```
+    ```    
+    StepperRun(512);
+    ```
 2. Set step as 512 and drive a 2 phase stepper motor.
-```    
-StepperRun(512, 1);
-```
+    ```    
+    StepperRun(512, 1);
+    ```
 
 Note that number of pulses for "__step" is 4 (for 2-phase motor), and the number of steps of one motor turn is dependent on the spec of the stepping motor. For example, for the motor with 100 pulse per turn (3.6 degree per pulse), __step=25 will make one turn of the motor.
 
 Stepper motor speed cannot be changed from the library. A library update could do it. Contribution welcome!
+
+### 4. Get the firmware version (only for L298 V105+)
+
+It is possible to know the firmware version with:
+```
+uint16_t getversion()
+```
+Returns the version as an integer. Data type: *uint16_t*
+0 : firware<105
+From 1 to 5:wire error
+65535 : I2C no connected
+105 : firmware version 105
