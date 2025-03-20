@@ -7,7 +7,8 @@
     Author     : Jerry Yip , benppppp
     Create Time: 2017-02
     Change Log : 2018-05-31 1.support two phase stepper motor
-                 20204-06-28 (L298) support frequence (V1.03) needs firmwre update (by benppppp)
+                 2024-06-28 V1.0.4 support frequence. For L298 , needs firmwre 103 update (by benppppp)
+		 2025-03-20 V1.0.5 get firmware version and set timeout. For L298 , needs firmwre 105 update (by benppppp)
 
 * The MIT License (MIT)
  *
