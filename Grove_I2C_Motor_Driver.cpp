@@ -115,9 +115,8 @@ void I2CMotorDriver::speed(unsigned char motor_id, int _speed) {
     Wire.write(this->_speed1);              // send speed of motor1
     Wire.write(this->_speed2);              // send speed of motor2
     Wire.endTransmission();    		        // stop transmitting
-    delay(4); 				                // Wait
+    //delay(4); 				            // Wait
 }
-
 
 // Set the frequence of PWM
 // Motor shield V1.3: F_3921Hz is default _frequence: F_31372Hz, F_3921Hz, F_490Hz, F_122Hz, F_30Hz (first byte used only)
@@ -126,9 +125,62 @@ void I2CMotorDriver::frequence(unsigned int _frequence)
 {
 	Wire.beginTransmission(this->_i2c_add); // begin transmission
   	Wire.write(PWMFrequenceSet);            // set frequence header
- 	Wire.write(_frequence & 0xFF);                 // send frequence LSB
- 	Wire.write(_frequence >> 8);                   //send _frequence MSB 
+ 	Wire.write(_frequence & 0xFF);          // send frequence LSB
+ 	Wire.write(_frequence >> 8);            // send _frequence MSB 
  	Wire.endTransmission();                 // stop transmitting
+}
+
+// Set the timeout in ms
+// Motor stop after that timeout
+void I2CMotorDriver::timeout(unsigned int _timeout)
+{
+	Wire.beginTransmission(this->_i2c_add); // begin transmission
+  	Wire.write(TimeoutSet);                 // set GetVersion header
+ 	Wire.write(_timeout & 0xFF);            // send frequence LSB
+ 	Wire.write(_timeout >> 8);              // send _frequence MSB 
+ 	Wire.endTransmission();                 // stop transmitting
+}
+
+// Get the firmware version
+// Version=0:firmware<105
+// Version=65535:I2C no connected
+// Version from 1 to 5:wire error
+uint16_t I2CMotorDriver::getversion()
+{
+	//Will return motor speed=0 if version<105
+	speed(MOTOR1, 0);
+	delayMicroseconds(50);
+	speed(MOTOR2, 0);
+	delayMicroseconds(50);
+	Wire.beginTransmission(this->_i2c_add); // begin transmission
+  	Wire.write(GetVersion);                 // set Firmware Version header
+ 	Wire.write(0);                          // no meaning	
+ 	Wire.write(0);                          // no meaning 
+ 	uint8_t _error=Wire.endTransmission();  // stop transmitting
+	delayMicroseconds(50);
+	if (_error>0) return _error;
+	Wire.requestFrom((uint8_t)(this->_i2c_add), (uint8_t)2);
+    uint16_t _b1 = Wire.read();
+    uint16_t _b2 = Wire.read();
+    return (uint16_t)(_b1 + (_b2 << 8));
+}
+
+// Get timed out
+// Available only with V105+
+// True if timeout occured
+// Reset with speed, frequence, stop
+uint16_t I2CMotorDriver::gettimedout()
+{
+	Wire.beginTransmission(this->_i2c_add); // begin transmission
+  	Wire.write(GetTimedout);                // set GetTimed out Version header
+ 	Wire.write(0);                          // no meaning	
+ 	Wire.write(0);                          // no meaning 
+ 	Wire.endTransmission();                 // stop transmitting
+	delayMicroseconds(2);
+	Wire.requestFrom((uint8_t)(this->_i2c_add), (uint8_t)2);
+    uint16_t _b1 = Wire.read();
+    uint16_t _b2 = Wire.read();
+    return (uint16_t)(_b1 + (_b2 << 8));
 }
 
 // Stop one motor
