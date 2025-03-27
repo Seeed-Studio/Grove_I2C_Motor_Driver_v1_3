@@ -8,7 +8,7 @@ void setup() {
   Serial.begin(9600);
   //Get Version
   Wire.beginTransmission(0x0f);  // begin transmission @ adress
-  Wire.write(0x91);              // set get version header
+  Wire.write(0x91);              // set get firmware version header
   Wire.write(0);                 // no meaning
   Wire.write(0);                 // no meaning
 
@@ -28,10 +28,10 @@ void setup() {
   delay(1);  //wait for wire buffer empty
 
   Wire.requestFrom(0x0f, 2);
-  byte version = Wire.read();  //get version
-  Wire.read();                 //0=no meaning
-  Serial.print("Version: ");   //
-  Serial.println(version);     //print 0 if version<105
+  byte version = Wire.read();        //get firmware version
+  Wire.read();                       //0=no meaning
+  Serial.print("Firmware Version: ");//
+  Serial.println(version);           //print 0 if version<105
 }
 
 void loop() {
