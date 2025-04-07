@@ -15,6 +15,9 @@ Motor	KEYWORD1
 speed	KEYWORD2
 begin	KEYWORD2
 frequence	KEYWORD2
+timeout	KEYWORD2
+getversion	KEYWORD2
+gettimedout	KEYWORD2
 stop	KEYWORD2
 StepperRun	KEYWORD2
 

@@ -4,9 +4,9 @@
  *
  * Copyright (c) 2012 seeed technology inc.
  * Website    : www.seeed.cc
- * Author     : Jerry Yip
+ * Author     : Jerry Yip , benppppp
  * Create Time: 2017-02
- * Change Log : V1.03 frequence char->int
+ * Change Log : V1.05 get firmware version and set timeout
  *
  * The MIT License (MIT)
  *
@@ -37,6 +37,11 @@
 /******I2C command definitions*************/
 #define MotorSpeedSet             0x82
 #define PWMFrequenceSet           0x84
+#define TimeoutSet                0x86
+#define GetSpeed                  0x90
+#define GetVersion                0x91
+#define GetTimedout               0x92
+#define GetTimeout                0x93
 #define DirectionSet              0xaa
 #define MotorSetA                 0xa1
 #define MotorSetB                 0xa5
@@ -90,6 +95,12 @@ public:
     // F_3921Hz is default
     // _frequence: F_31372Hz, F_3921Hz, F_490Hz, F_122Hz, F_30Hz
     void frequence(unsigned int _frequence);
+	// Set the timeout in ms
+	void timeout(unsigned int _timeout);
+	// Get the firmware version
+	uint16_t getversion();
+	// Get timed out
+	uint16_t gettimedout();
     // Stop one motor
     // motor_id: MOTOR1, MOTOR2
     void stop(unsigned char motor_id);
